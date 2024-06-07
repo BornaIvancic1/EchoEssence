@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -11,12 +10,12 @@
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home" />
     <fragment
-        android:id="@+id/libraryFragment"
+        android:id="@+id/navigation_library"
         android:name="hr.algebra.echoessence.ui.library.LibraryFragment"
         android:label="LibraryFragment"
         tools:layout="@layout/fragment_library" />
     <fragment
-        android:id="@+id/meFragment"
+        android:id="@+id/navigation_me"
         android:name="hr.algebra.echoessence.ui.me.MeFragment"
         android:label="fragment_me"
         tools:layout="@layout/fragment_me" />

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import hr.algebra.echoessence.R
 import hr.algebra.echoessence.databinding.FragmentMeBinding
 
 class MeFragment : Fragment() {
@@ -28,6 +29,11 @@ class MeFragment : Fragment() {
         _binding = FragmentMeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
+        val email = arguments?.getString("email")
+        val name = arguments?.getString("name")
+
+        val textView = root.findViewById<TextView>(R.id.textView)
+        textView.text = "$email\n$name"
 
         return root
     }
