@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_home">
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="hr.algebra.echoessence.ui.home.HomeFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/fragment_home" />
+    <fragment
+        android:id="@+id/libraryFragment"
+        android:name="hr.algebra.echoessence.ui.library.LibraryFragment"
+        android:label="LibraryFragment"
+        tools:layout="@layout/fragment_library" />
+    <fragment
+        android:id="@+id/meFragment"
+        android:name="hr.algebra.echoessence.ui.me.MeFragment"
+        android:label="fragment_me"
+        tools:layout="@layout/fragment_me" />
+
+</navigation>
