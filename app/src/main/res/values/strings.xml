@@ -7,4 +7,5 @@
     <string name="title_me">Me</string>
     <string name="albums">Albums</string>
     <string name="album">Album</string>
+    <string name="sign_out">Sign Out</string>
 </resources>

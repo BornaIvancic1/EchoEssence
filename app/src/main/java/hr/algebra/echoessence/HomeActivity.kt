@@ -23,7 +23,7 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        supportActionBar?.hide()
         auth = FirebaseAuth.getInstance()
 
         val email = intent.getStringExtra("email")
@@ -49,10 +49,6 @@ class HomeActivity : AppCompatActivity() {
 
         navView.setupWithNavController(navController)
 
-        binding.signOutBtn.setOnClickListener {
-            auth.signOut()
-            startActivity(Intent(this, MainActivity::class.java))
-            finish()
-        }
+
     }
 }
