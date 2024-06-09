@@ -17,7 +17,12 @@
     <fragment
         android:id="@+id/navigation_me"
         android:name="hr.algebra.echoessence.ui.me.MeFragment"
-        android:label="fragment_me"
-        tools:layout="@layout/fragment_me" />
-
+        android:label="MeFragment">
+        <argument
+            android:name="email"
+            app:argType="string" />
+        <argument
+            android:name="name"
+            app:argType="string" />
+    </fragment>
 </navigation>

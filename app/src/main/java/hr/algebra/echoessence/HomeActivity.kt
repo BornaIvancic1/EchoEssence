@@ -3,7 +3,8 @@ package hr.algebra.echoessence
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
+import android.util.Log
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
@@ -11,6 +12,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import hr.algebra.echoessence.databinding.ActivityHomeBinding
+import hr.algebra.echoessence.ui.me.MeViewModel
 
 class HomeActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
@@ -26,26 +28,28 @@ class HomeActivity : AppCompatActivity() {
         val email = intent.getStringExtra("email")
         val displayName = intent.getStringExtra("name")
 
-        val bundle = Bundle()
-        bundle.putString("email", email)
-        bundle.putString("name", displayName)
+        val meViewModel = ViewModelProvider(this)[MeViewModel::class.java]
+        meViewModel.email.value = email
+        meViewModel.name.value = displayName
+
+        Log.d("HomeActivity", "Email: $email, Name: $displayName")
 
         val navView: BottomNavigationView = binding.navView
 
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
-        navController.setGraph(R.navigation.mobile_navigation, bundle)
-
         val appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.navigation_home, R.id.navigation_library, R.id.navigation_me
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
+
         navView.setupWithNavController(navController)
 
-        findViewById<Button>(R.id.signOutBtn).setOnClickListener{
+        binding.signOutBtn.setOnClickListener {
             auth.signOut()
             startActivity(Intent(this, MainActivity::class.java))
+            finish()
         }
     }
 }

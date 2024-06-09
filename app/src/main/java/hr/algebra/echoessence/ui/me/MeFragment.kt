@@ -1,21 +1,19 @@
 package hr.algebra.echoessence.ui.me
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import hr.algebra.echoessence.R
 import hr.algebra.echoessence.databinding.FragmentMeBinding
 
 class MeFragment : Fragment() {
 
     private var _binding: FragmentMeBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -23,17 +21,21 @@ class MeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val notificationsViewModel =
-            ViewModelProvider(this).get(MeViewModel::class.java)
+        val meViewModel = ViewModelProvider(requireActivity()).get(MeViewModel::class.java)
 
         _binding = FragmentMeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val email = arguments?.getString("email")
-        val name = arguments?.getString("name")
+        meViewModel.email.observe(viewLifecycleOwner, Observer { email ->
+            Log.d("MeFragment", "Email: $email")
+        })
 
-        val textView = root.findViewById<TextView>(R.id.textView)
-        textView.text = "$email\n$name"
+        meViewModel.name.observe(viewLifecycleOwner, Observer { name ->
+            Log.d("MeFragment", "Name: $name")
+        })
+
+        val textView = root.findViewById<TextView>(hr.algebra.echoessence.R.id.textView)
+        textView.text = "${meViewModel.email.value}\n${meViewModel.name.value}"
 
         return root
     }
