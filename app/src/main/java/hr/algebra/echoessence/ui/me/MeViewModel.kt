@@ -10,6 +10,8 @@ class MeViewModel : ViewModel() {
         value = "This is notifications Fragment"
     }
     val text: LiveData<String> = _text
-    val email = MutableLiveData<String>()
-    val name = MutableLiveData<String>()
+
+        val email = MutableLiveData<String>()
+        val name = MutableLiveData<String>()
+        val photoUrl = MutableLiveData<String>()
 }

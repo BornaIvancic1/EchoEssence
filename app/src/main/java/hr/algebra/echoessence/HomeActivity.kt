@@ -11,6 +11,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import hr.algebra.echoessence.databinding.ActivityHomeBinding
 import hr.algebra.echoessence.ui.me.MeViewModel
 
@@ -27,12 +28,14 @@ class HomeActivity : AppCompatActivity() {
 
         val email = intent.getStringExtra("email")
         val displayName = intent.getStringExtra("name")
+        val photoUrl = auth.currentUser?.photoUrl.toString()
 
         val meViewModel = ViewModelProvider(this)[MeViewModel::class.java]
         meViewModel.email.value = email
         meViewModel.name.value = displayName
+        meViewModel.photoUrl.value = photoUrl
 
-        Log.d("HomeActivity", "Email: $email, Name: $displayName")
+        Log.d("HomeActivity", "Email: $email, Name: $displayName, PhotoUrl: $photoUrl")
 
         val navView: BottomNavigationView = binding.navView
 
