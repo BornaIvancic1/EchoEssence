@@ -56,6 +56,16 @@ class MainActivity : AppCompatActivity() {
 
 
     }
+    override fun onStart() {
+        super.onStart()
+        val currentUser = auth.currentUser
+        if (currentUser != null) {
+            val intent: Intent = Intent(this, HomeActivity::class.java)
+            intent.putExtra("email", currentUser.email)
+            intent.putExtra("name", currentUser.displayName)
+            startActivity(intent)
+        }
+    }
 
     private fun signInGoogle() {
         val signInIntent = googleSignInClient.signInIntent
