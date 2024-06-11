@@ -11,7 +11,7 @@
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/albums"
+        android:text="@string/songs"
         android:textSize="24sp"
         android:padding="16dp"
         android:layout_alignParentTop="true" />
@@ -23,19 +23,18 @@
         android:layout_above="@+id/searchInput"
         android:layout_below="@+id/title" />
 
-    <EditText
+    <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/searchInput"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-
-   android:hint="search"
+        android:hint="Artist, Song, Album"
         android:inputType="text"
         android:layout_toLeftOf="@+id/searchButton"
         android:layout_alignParentBottom="true" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/searchButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -43,6 +42,7 @@ android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:text="search"
         android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true" />
+        android:layout_alignParentBottom="true"
+        app:cornerRadius="20dp"/>
 
 </RelativeLayout>

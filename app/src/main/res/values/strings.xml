@@ -8,4 +8,5 @@
     <string name="albums">Albums</string>
     <string name="album">Album</string>
     <string name="sign_out">Sign Out</string>
+    <string name="songs">Songs</string>
 </resources>
