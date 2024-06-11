@@ -35,7 +35,6 @@ class HomeActivity : AppCompatActivity() {
         meViewModel.name.value = displayName
         meViewModel.photoUrl.value = photoUrl
 
-        Log.d("HomeActivity", "Email: $email, Name: $displayName, PhotoUrl: $photoUrl")
 
         val navView: BottomNavigationView = binding.navView
 
