@@ -33,36 +33,25 @@ class HomeFragment : Fragment(), OnAlbumClickListener {
         savedInstanceState: Bundle?
     ): View {
         val homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
-        val view = inflater.inflate(R.layout.fragment_home, container, false)
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         val recyclerView = root.findViewById<RecyclerView>(R.id.recyclerView)
         recyclerView.layoutManager = GridLayoutManager(context, 1)
 
-        val playPauseButton = view.findViewById<ImageButton>(R.id.playPauseButton)
+        val playPauseButton = root.findViewById<ImageButton>(R.id.playPauseButton)
         playPauseButton.setOnClickListener {
-            if (MusicPlayer.mediaPlayer != null) {
-                if (MusicPlayer.mediaPlayer?.isPlaying == true) {
-                    MusicPlayer.mediaPlayer?.pause()
-                    playPauseButton.setImageResource(android.R.drawable.ic_media_play)
-                } else {
-                    MusicPlayer.mediaPlayer?.start()
-                    playPauseButton.setImageResource(android.R.drawable.ic_media_pause)
-                }
-            } else {
-                Toast.makeText(context, "No music selected", Toast.LENGTH_SHORT).show()
-            }
+            playPauseMusic()
         }
 
-        val coverImage = view.findViewById<ImageView>(R.id.albumArt)
+        val coverImage = root.findViewById<ImageView>(R.id.albumArt)
 
         homeViewModel.music.observe(viewLifecycleOwner, Observer { music ->
             Log.d("HomeFragment", "Number of music: ${music.data.size}")
             if (music.data.isEmpty()) {
                 Toast.makeText(context, "No music available", Toast.LENGTH_SHORT).show()
             } else {
-                recyclerView.adapter = activity?.let { MyAdapter(it, music.data, this) }
+                recyclerView.adapter = activity?.let { MyAdapter(it, music.data, this, ::playPauseMusic) }
             }
         })
 
@@ -87,6 +76,23 @@ class HomeFragment : Fragment(), OnAlbumClickListener {
         val coverImage = view?.findViewById<ImageView>(R.id.albumArt)
         coverImage?.let {
             Picasso.get().load(albumCoverUrl).into(it)
+        }
+    }
+
+    override fun onPlayPauseClick() {
+        playPauseMusic()
+    }
+
+    fun playPauseMusic() {
+        val playPauseButton = view?.findViewById<ImageButton>(R.id.playPauseButton)
+        if (MusicPlayer.mediaPlayer?.isPlaying == true) {
+            MusicPlayer.mediaPlayer?.pause()
+            playPauseButton?.setImageResource(android.R.drawable.ic_media_play)
+        } else if (MusicPlayer.mediaPlayer != null) {
+            MusicPlayer.mediaPlayer?.start()
+            playPauseButton?.setImageResource(android.R.drawable.ic_media_pause)
+        } else {
+            Toast.makeText(context, "No music selected", Toast.LENGTH_SHORT).show()
         }
     }
 }

@@ -18,9 +18,14 @@ import hr.algebra.echoessence.model.Album
 import hr.algebra.echoessence.model.Data
 import hr.algebra.echoessence.model.MyData
 import hr.algebra.echoessence.singleton.MusicPlayer
+import hr.algebra.echoessence.ui.home.HomeFragment
 
-class MyAdapter(val context: FragmentActivity, val dataList:List<Data>, val listener: OnAlbumClickListener):
-    RecyclerView.Adapter<MyAdapter.MyViewHolder>(){
+class MyAdapter(
+    val context: FragmentActivity,
+    val dataList:List<Data>,
+    val listener: OnAlbumClickListener,
+    val playPauseMusic: () -> Unit
+): RecyclerView.Adapter<MyAdapter.MyViewHolder>(){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val itemView=LayoutInflater.from(context).inflate(R.layout.item_album,parent,false)
@@ -41,6 +46,7 @@ class MyAdapter(val context: FragmentActivity, val dataList:List<Data>, val list
         holder.image.setOnClickListener {
             playMusic(currentData.preview)
             listener.onAlbumClick(currentData.album.cover_xl)
+
         }
 
         holder.save.setOnClickListener{
@@ -50,11 +56,12 @@ class MyAdapter(val context: FragmentActivity, val dataList:List<Data>, val list
     private fun playMusic(previewUrl: String) {
         MusicPlayer.mediaPlayer?.stop()
         MusicPlayer.mediaPlayer?.release()
-        MusicPlayer.mediaPlayer = MediaPlayer.create(context, previewUrl.toUri())
-        MusicPlayer.mediaPlayer?.setOnErrorListener { mp, what, extra ->
-            true
+        MusicPlayer.mediaPlayer = MediaPlayer.create(context, previewUrl.toUri()).apply {
+            setOnErrorListener { mp, what, extra ->
+                true
+            }
+            start()
         }
-        MusicPlayer.mediaPlayer?.start()
     }
 
     class MyViewHolder(itemView: View):RecyclerView.ViewHolder(itemView) {
