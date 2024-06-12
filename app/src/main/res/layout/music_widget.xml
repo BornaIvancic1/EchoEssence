@@ -1,33 +1,47 @@
-<!-- File: res/layout/music_player.xml -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.circularreveal.CircularRevealLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="?attr/colorSecondary"
+  >
 
     <ImageView
         android:id="@+id/albumArt"
         android:layout_width="50dp"
-        android:layout_height="50dp" />
+        android:layout_height="50dp"
+        android:layout_margin="5dp"/>
 
     <TextView
         android:id="@+id/songName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="No track playing" />
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:layout_margin="5dp"
+        android:text="No track playing"
+        android:textColor="?attr/colorOnPrimary"/>
 
-   <TextView
+    <TextView
         android:id="@+id/artistName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="No track playing" />
+        android:layout_margin="5dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:text=""
+        android:textColor="?attr/colorOnPrimary"/>
 
     <ImageButton
         android:id="@+id/playPauseButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@android:drawable/ic_media_play" />
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@android:drawable/ic_media_pause"
+        android:background="@drawable/ripple_effect"
+        android:layout_marginStart="5dp"
+        />
 
-</LinearLayout>
+</com.google.android.material.circularreveal.CircularRevealLinearLayout>

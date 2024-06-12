@@ -44,16 +44,16 @@ class MyAdapter(
         Picasso.get().load(currentData.album.cover_xl).into(holder.image)
 
         holder.image.setOnClickListener {
-            playMusic(currentData.preview)
+            playMusic(currentData.preview, currentData.title, currentData.artist.name)
             listener.onAlbumClick(currentData.album.cover_xl)
-
         }
+
 
         holder.save.setOnClickListener{
         }
     }
 
-    private fun playMusic(previewUrl: String) {
+    private fun playMusic(previewUrl: String, songName: String, artistName: String) {
         MusicPlayer.mediaPlayer?.stop()
         MusicPlayer.mediaPlayer?.release()
         MusicPlayer.mediaPlayer = MediaPlayer.create(context, previewUrl.toUri()).apply {
@@ -62,7 +62,14 @@ class MyAdapter(
             }
             start()
         }
+
+        val songNameTextView = context.findViewById<TextView>(R.id.songName)
+        val artistNameTextView = context.findViewById<TextView>(R.id.artistName)
+
+        songNameTextView.text = songName
+        artistNameTextView.text = artistName
     }
+
 
     class MyViewHolder(itemView: View):RecyclerView.ViewHolder(itemView) {
         val image: ImageView

@@ -60,8 +60,12 @@ class HomeFragment : Fragment(), OnAlbumClickListener {
 
         searchButton.setOnClickListener {
             val query = searchInput.text.toString()
-            homeViewModel.searchMusic(requireContext(), query)
-            searchInput.setText("")
+            if (query.trim().isNotEmpty()) {
+                homeViewModel.searchMusic(requireContext(), query)
+                searchInput.setText("")
+            } else {
+                Toast.makeText(context, "Please enter a search term", Toast.LENGTH_SHORT).show()
+            }
         }
 
         return root
