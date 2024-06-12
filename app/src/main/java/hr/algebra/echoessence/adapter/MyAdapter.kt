@@ -17,11 +17,10 @@ import hr.algebra.echoessence.R
 import hr.algebra.echoessence.model.Album
 import hr.algebra.echoessence.model.Data
 import hr.algebra.echoessence.model.MyData
+import hr.algebra.echoessence.singleton.MusicPlayer
 
-class MyAdapter(val context: FragmentActivity, val dataList:List<Data>):
-RecyclerView.Adapter<MyAdapter.MyViewHolder>(){
-
-    private var mediaPlayer: MediaPlayer? = null
+class MyAdapter(val context: FragmentActivity, val dataList:List<Data>, val listener: OnAlbumClickListener):
+    RecyclerView.Adapter<MyAdapter.MyViewHolder>(){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val itemView=LayoutInflater.from(context).inflate(R.layout.item_album,parent,false)
@@ -33,37 +32,41 @@ RecyclerView.Adapter<MyAdapter.MyViewHolder>(){
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        val currentData=dataList[position]
+        val currentData = dataList[position]
 
-        holder.title.text=currentData.title
+        holder.title.text = currentData.title
+        holder.artist.text = currentData.artist.name
         Picasso.get().load(currentData.album.cover_xl).into(holder.image)
 
-        holder.play.setOnClickListener{
-            mediaPlayer?.stop()
-            mediaPlayer?.release()
-            mediaPlayer = MediaPlayer.create(context,currentData.preview.toUri())
-            mediaPlayer?.start()
+        holder.image.setOnClickListener {
+            playMusic(currentData.preview)
+            listener.onAlbumClick(currentData.album.cover_xl)
         }
-        holder.pause.setOnClickListener{
-            mediaPlayer?.pause()
-        }
+
         holder.save.setOnClickListener{
-            // Implement your save functionality here
         }
+    }
+
+    private fun playMusic(previewUrl: String) {
+        MusicPlayer.mediaPlayer?.stop()
+        MusicPlayer.mediaPlayer?.release()
+        MusicPlayer.mediaPlayer = MediaPlayer.create(context, previewUrl.toUri())
+        MusicPlayer.mediaPlayer?.setOnErrorListener { mp, what, extra ->
+            true
+        }
+        MusicPlayer.mediaPlayer?.start()
     }
 
     class MyViewHolder(itemView: View):RecyclerView.ViewHolder(itemView) {
         val image: ImageView
         val title: TextView
-        val play: ImageButton
-        val pause: ImageButton
+        val artist: TextView
         val save: ImageButton
 
         init {
             image=itemView.findViewById(R.id.musicImage)
             title=itemView.findViewById(R.id.musicTitle)
-            play=itemView.findViewById(R.id.btnPlay)
-            pause=itemView.findViewById(R.id.btnPause)
+            artist=itemView.findViewById(R.id.musicArtist)
             save=itemView.findViewById(R.id.btnSave)
         }
     }

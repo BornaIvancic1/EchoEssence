@@ -41,22 +41,15 @@
                 android:layout_weight="1"
                 android:text="TextView"
                 android:textColor="?attr/myTextColor"/>
-
-            <ImageButton
-                android:id="@+id/btnPlay"
-                android:layout_width="50dp"
+            <TextView
+                android:id="@+id/musicArtist"
+                android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:src="@android:drawable/ic_media_play"
-                android:background="@drawable/ripple_effect" />
+                android:text="TextView"
+                android:textColor="?attr/myTextColor"/>
 
-            <ImageButton
-                android:id="@+id/btnPause"
-                android:layout_width="50dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:src="@android:drawable/ic_media_pause"
-                android:background="@drawable/ripple_effect" />
+
 
             <ImageButton
                 android:id="@+id/btnSave"

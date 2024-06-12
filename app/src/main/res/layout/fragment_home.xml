@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -20,8 +19,15 @@
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_above="@+id/searchInput"
+        android:layout_above="@+id/musicPlayer"
         android:layout_below="@+id/title" />
+
+    <include
+        android:id="@+id/musicPlayer"
+        layout="@layout/music_widget"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/searchInput" />
 
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/searchInput"
@@ -38,11 +44,10 @@
         android:id="@+id/searchButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-android:layout_marginStart="20dp"
+        android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:text="search"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         app:cornerRadius="20dp"/>
-
 </RelativeLayout>
