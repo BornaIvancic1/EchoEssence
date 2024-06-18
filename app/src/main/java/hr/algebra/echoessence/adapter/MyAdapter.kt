@@ -1,6 +1,6 @@
 package hr.algebra.echoessence.adapter
 
-import android.app.Activity
+import android.content.Context
 import android.media.MediaPlayer
 import android.view.LayoutInflater
 import android.view.View
@@ -8,27 +8,28 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.view.menu.ActionMenuItemView
+import android.widget.Toast
 import androidx.core.net.toUri
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import hr.algebra.echoessence.R
-import hr.algebra.echoessence.model.Album
 import hr.algebra.echoessence.model.Data
-import hr.algebra.echoessence.model.MyData
+import hr.algebra.echoessence.model.Library
+import hr.algebra.echoessence.dao.LibraryRepository
 import hr.algebra.echoessence.singleton.MusicPlayer
-import hr.algebra.echoessence.ui.home.HomeFragment
 
 class MyAdapter(
     val context: FragmentActivity,
-    val dataList:List<Data>,
+    val dataList: List<Data>,
     val listener: OnAlbumClickListener,
     val playPauseMusic: () -> Unit
-): RecyclerView.Adapter<MyAdapter.MyViewHolder>(){
+) : RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
+
+    private val libraryRepository = LibraryRepository(context)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        val itemView=LayoutInflater.from(context).inflate(R.layout.item_album,parent,false)
+        val itemView = LayoutInflater.from(context).inflate(R.layout.item_track, parent, false)
         return MyViewHolder(itemView)
     }
 
@@ -48,8 +49,25 @@ class MyAdapter(
             listener.onAlbumClick(currentData.album.cover_xl)
         }
 
-
-        holder.save.setOnClickListener{
+        holder.save.setOnClickListener {
+            val currentUserId = getCurrentUserId() // Get the current use r ID from session or preferences
+            if (currentUserId != null) {
+                val libraryEntry = Library(
+                    id = currentData.id,
+                    userId = currentUserId,
+                    albumTitle = currentData.album.title,
+                    duration = currentData.duration,
+                    albumCoverUrl = currentData.album.cover_xl,
+                    artistName = currentData.artist.name,
+                    artistId = currentData.artist.id
+                )
+                libraryRepository.deleteLibraryEntry(libraryEntry.id)
+                Toast.makeText(context, "Deleted successfully", Toast.LENGTH_SHORT).show()
+                notifyItemRemoved(position)
+                notifyItemRangeChanged(position, dataList.size)
+            } else {
+                Toast.makeText(context, "User not logged in", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -70,18 +88,15 @@ class MyAdapter(
         artistNameTextView.text = artistName
     }
 
+    class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val image: ImageView = itemView.findViewById(R.id.trackImage)
+        val title: TextView = itemView.findViewById(R.id.trackTitle)
+        val artist: TextView = itemView.findViewById(R.id.trackArtist)
+        val save: ImageButton = itemView.findViewById(R.id.btnSave)
+    }
 
-    class MyViewHolder(itemView: View):RecyclerView.ViewHolder(itemView) {
-        val image: ImageView
-        val title: TextView
-        val artist: TextView
-        val save: ImageButton
-
-        init {
-            image=itemView.findViewById(R.id.musicImage)
-            title=itemView.findViewById(R.id.musicTitle)
-            artist=itemView.findViewById(R.id.musicArtist)
-            save=itemView.findViewById(R.id.btnSave)
-        }
+    private fun getCurrentUserId(): Int? {
+        val sharedPreferences = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+        return sharedPreferences.getInt("userId", -1).takeIf { it != -1 }
     }
 }

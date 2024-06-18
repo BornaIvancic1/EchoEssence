@@ -7,12 +7,7 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -21,6 +16,8 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import hr.algebra.echoessence.databinding.ActivityMainBinding
+import hr.algebra.echoessence.model.User
+import hr.algebra.echoessence.dao.UserRepository
 
 class MainActivity : AppCompatActivity() {
 
@@ -28,6 +25,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var googleSignInClient: GoogleSignInClient
     private lateinit var signInLauncher: ActivityResultLauncher<Intent>
+    private lateinit var userRepository: UserRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +34,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         supportActionBar?.hide()
         auth = FirebaseAuth.getInstance()
+        userRepository = UserRepository(this)
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))
@@ -53,17 +52,20 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.gSignInBtn).setOnClickListener {
             signInGoogle()
         }
-
-
     }
+
     override fun onStart() {
         super.onStart()
         val currentUser = auth.currentUser
         if (currentUser != null) {
-            val intent: Intent = Intent(this, HomeActivity::class.java)
-            intent.putExtra("email", currentUser.email)
-            intent.putExtra("name", currentUser.displayName)
-            startActivity(intent)
+            val user = User(
+                id = currentUser.uid.hashCode(), // Generate a unique ID
+                email = currentUser.email ?: "",
+                firstName = currentUser.displayName?.split(" ")?.get(0) ?: "",
+                lastName = currentUser.displayName?.split(" ")?.getOrNull(1) ?: ""
+            )
+            userRepository.addUser(user) // Add user to the local database if not exists
+            navigateToHome(currentUser.email, currentUser.displayName)
         }
     }
 
@@ -87,13 +89,25 @@ class MainActivity : AppCompatActivity() {
         val credential = GoogleAuthProvider.getCredential(account.idToken, null)
         auth.signInWithCredential(credential).addOnCompleteListener {
             if (it.isSuccessful) {
-                val intent: Intent = Intent(this, HomeActivity::class.java)
-                intent.putExtra("email", account.email)
-                intent.putExtra("name", account.displayName)
-                startActivity(intent)
+                val user = User(
+                    id = account.id.hashCode(), // Generate a unique ID
+                    email = account.email ?: "",
+                    firstName = account.givenName ?: "",
+                    lastName = account.familyName ?: ""
+                )
+                userRepository.addUser(user) // Add user to the local database if not exists
+                navigateToHome(account.email, account.displayName)
             } else {
                 Toast.makeText(this, it.exception.toString(), Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    private fun navigateToHome(email: String?, name: String?) {
+        val intent: Intent = Intent(this, HomeActivity::class.java).apply {
+            putExtra("email", email)
+            putExtra("name", name)
+        }
+        startActivity(intent)
     }
 }
