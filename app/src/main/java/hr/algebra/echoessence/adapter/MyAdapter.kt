@@ -40,7 +40,6 @@ class MyAdapter(
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val currentData = dataList[position]
-
         holder.title.text = currentData.title
         holder.artist.text = currentData.artist.name
         Picasso.get().load(currentData.album.cover_xl).into(holder.image)
@@ -62,10 +61,8 @@ class MyAdapter(
                     artistName = currentData.artist.name,
                     artistId = currentData.artist.id
                 )
-                libraryRepository.deleteLibraryEntry(libraryEntry.id)
-                Toast.makeText(context, "Deleted successfully", Toast.LENGTH_SHORT).show()
-                notifyItemRemoved(position)
-                notifyItemRangeChanged(position, dataList.size)
+                libraryRepository.addLibraryEntry(libraryEntry)
+                Toast.makeText(context, "Added to library successfully", Toast.LENGTH_SHORT).show()
             } else {
                 Toast.makeText(context, "User not logged in", Toast.LENGTH_SHORT).show()
             }
@@ -103,9 +100,10 @@ class MyAdapter(
         }
     }
 
-
     private fun getCurrentUserId(): Int? {
         val sharedPreferences = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-        return sharedPreferences.getInt("userId", -1).takeIf { it != -1 }
+        val userId = sharedPreferences.getInt("userId", -1)
+        Log.d("MyAdapter", "Retrieved user ID: $userId")
+        return userId.takeIf { it != -1 }
     }
 }

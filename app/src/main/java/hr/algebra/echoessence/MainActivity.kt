@@ -1,8 +1,10 @@
 package hr.algebra.echoessence
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
@@ -59,15 +61,23 @@ class MainActivity : AppCompatActivity() {
         val currentUser = auth.currentUser
         if (currentUser != null) {
             val user = User(
-                id = currentUser.uid.hashCode(), // Generate a unique ID
+                id = currentUser.uid.hashCode(),
                 email = currentUser.email ?: "",
                 firstName = currentUser.displayName?.split(" ")?.get(0) ?: "",
                 lastName = currentUser.displayName?.split(" ")?.getOrNull(1) ?: ""
             )
-            userRepository.addUser(user) // Add user to the local database if not exists
+            userRepository.addUser(user)
+            Log.d("MainActivity", "User logged in: ${user.email}")
+
+            val sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+            val editor = sharedPreferences.edit()
+            editor.putInt("userId", user.id)
+            editor.apply()
+
             navigateToHome(currentUser.email, currentUser.displayName)
         }
     }
+
 
     private fun signInGoogle() {
         val signInIntent = googleSignInClient.signInIntent
@@ -90,18 +100,25 @@ class MainActivity : AppCompatActivity() {
         auth.signInWithCredential(credential).addOnCompleteListener {
             if (it.isSuccessful) {
                 val user = User(
-                    id = account.id.hashCode(), // Generate a unique ID
+                    id = account.id.hashCode(),
                     email = account.email ?: "",
                     firstName = account.givenName ?: "",
                     lastName = account.familyName ?: ""
                 )
-                userRepository.addUser(user) // Add user to the local database if not exists
+                userRepository.addUser(user)
+
+                val sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+                val editor = sharedPreferences.edit()
+                editor.putInt("userId", user.id)
+                editor.apply()
+
                 navigateToHome(account.email, account.displayName)
             } else {
                 Toast.makeText(this, it.exception.toString(), Toast.LENGTH_SHORT).show()
             }
         }
     }
+
 
     private fun navigateToHome(email: String?, name: String?) {
         val intent: Intent = Intent(this, HomeActivity::class.java).apply {
