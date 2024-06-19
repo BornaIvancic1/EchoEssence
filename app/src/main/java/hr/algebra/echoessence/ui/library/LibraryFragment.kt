@@ -55,14 +55,7 @@ class LibraryFragment : Fragment() {
             if (entries != null) {
                 libraryList.addAll(entries)
                 libraryAdapter.notifyDataSetChanged()
-            } else {
-                // Handle error loading entries
-                // Show a message to the user or log the error
-            }
-        } else {
-            // Handle error when user ID is not found
-            // Show a message to the user or log the error
-        }
+            } }
     }
 
     private fun getCurrentUserId(): Int? {

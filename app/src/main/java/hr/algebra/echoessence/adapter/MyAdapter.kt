@@ -56,6 +56,7 @@ class MyAdapter(
                     id = currentData.id,
                     userId = currentUserId,
                     albumTitle = currentData.album.title,
+                    songTitle=currentData.title,
                     duration = currentData.duration,
                     albumCoverUrl = currentData.album.cover_xl,
                     artistName = currentData.artist.name,

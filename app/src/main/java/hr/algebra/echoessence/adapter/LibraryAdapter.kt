@@ -30,8 +30,9 @@ class LibraryAdapter(
     override fun onBindViewHolder(holder: LibraryViewHolder, position: Int) {
         val currentLibrary = libraryList[position]
 
-        holder.trackTitle.text = currentLibrary.albumTitle
+        holder.trackTitle.text = currentLibrary.songTitle
         holder.trackArtist.text = currentLibrary.artistName
+        holder.albumTitle.text  = currentLibrary.albumTitle
         Picasso.get().load(currentLibrary.albumCoverUrl).into(holder.trackImage)
 
         holder.btnDeleteTrack.setOnClickListener {
@@ -43,6 +44,7 @@ class LibraryAdapter(
         val trackImage: ImageView = itemView.findViewById(R.id.trackImage)
         val trackTitle: TextView = itemView.findViewById(R.id.trackTitle)
         val trackArtist: TextView = itemView.findViewById(R.id.trackArtist)
+        val albumTitle: TextView = itemView.findViewById(R.id.albumTitle)
         val btnDeleteTrack: ImageButton = itemView.findViewById(R.id.btnDeleteTrack)
     }
 }

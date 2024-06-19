@@ -1,4 +1,5 @@
 package hr.algebra.echoessence.dao
+
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
@@ -7,7 +8,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
 
     companion object {
         private const val DATABASE_NAME = "echoessence.db"
-        private const val DATABASE_VERSION = 1
+        private const val DATABASE_VERSION = 2  // Incremented database version
 
         private const val TABLE_USERS = "users"
         private const val COLUMN_USER_ID = "id"
@@ -24,6 +25,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         private const val COLUMN_LIBRARY_USER_ID = "user_id"
         private const val COLUMN_LIBRARY_DATA_ID = "data_id"
         private const val COLUMN_LIBRARY_ALBUM = "album"
+        private const val COLUMN_LIBRARY_SONG = "song"  // Added song column
         private const val COLUMN_LIBRARY_DURATION = "duration"
         private const val COLUMN_LIBRARY_ALBUM_COVER_URL = "album_cover_url"
         private const val COLUMN_LIBRARY_ARTIST_NAME = "artist_name"
@@ -47,6 +49,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
                 + "$COLUMN_LIBRARY_USER_ID INTEGER,"
                 + "$COLUMN_LIBRARY_DATA_ID INTEGER,"
                 + "$COLUMN_LIBRARY_ALBUM TEXT,"
+                + "$COLUMN_LIBRARY_SONG TEXT,"  // Added song column
                 + "$COLUMN_LIBRARY_DURATION INTEGER,"
                 + "$COLUMN_LIBRARY_ALBUM_COVER_URL TEXT,"
                 + "$COLUMN_LIBRARY_ARTIST_NAME TEXT,"
@@ -60,9 +63,8 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        db.execSQL("DROP TABLE IF EXISTS $TABLE_USERS")
-        db.execSQL("DROP TABLE IF EXISTS $TABLE_DATA")
-        db.execSQL("DROP TABLE IF EXISTS $TABLE_LIBRARY")
-        onCreate(db)
+        if (oldVersion < 2) {
+            db.execSQL("ALTER TABLE $TABLE_LIBRARY ADD COLUMN $COLUMN_LIBRARY_SONG TEXT")
+        }
     }
 }

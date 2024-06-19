@@ -52,12 +52,17 @@
 
 
             <ImageButton
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:padding="13dp"
+                android:scaleType="fitCenter"
                 android:id="@+id/btnSave"
-                android:layout_width="50dp"
-                android:layout_height="wrap_content"
+
                 android:layout_weight="1"
-                android:src="@android:drawable/ic_menu_save"
-                android:background="@drawable/ripple_effect" />
+                android:src="@drawable/ic_save_24"
+                android:background="@drawable/ripple_effect"
+                app:tint="?attr/myTextColor"
+                />
 
 
         </LinearLayout>
