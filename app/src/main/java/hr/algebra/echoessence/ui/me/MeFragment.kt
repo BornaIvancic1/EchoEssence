@@ -14,6 +14,7 @@ import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import hr.algebra.echoessence.MainActivity
 import hr.algebra.echoessence.databinding.FragmentMeBinding
+import java.util.ResourceBundle.clearCache
 
 class MeFragment : Fragment() {
 
@@ -52,6 +53,7 @@ class MeFragment : Fragment() {
 
         binding.signOutBtn.setOnClickListener {
             auth.signOut()
+            clearCache()
             startActivity(Intent(activity, MainActivity::class.java))
             activity?.finish()
         }

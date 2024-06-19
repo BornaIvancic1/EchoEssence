@@ -44,7 +44,7 @@ class MyAdapter(
         holder.artist.text = currentData.artist.name
         Picasso.get().load(currentData.album.cover_xl).into(holder.image)
 
-        holder.image.setOnClickListener {
+        holder.itemView.setOnClickListener {
             playMusic(currentData.preview, currentData.title, currentData.artist.name)
             listener.onAlbumClick(currentData.album.cover_xl)
         }
@@ -56,7 +56,7 @@ class MyAdapter(
                     id = currentData.id,
                     userId = currentUserId,
                     albumTitle = currentData.album.title,
-                    songTitle=currentData.title,
+                    songTitle = currentData.title,
                     duration = currentData.duration,
                     albumCoverUrl = currentData.album.cover_xl,
                     artistName = currentData.artist.name,
@@ -88,17 +88,11 @@ class MyAdapter(
         artistNameTextView.text = artistName
     }
 
-    class MyViewHolder(itemView: View):RecyclerView.ViewHolder(itemView) {
-        val image: ImageView
-        val title: TextView
-        val artist: TextView
-        val save: ImageButton
-        init {
-            image=itemView.findViewById(R.id.musicImage)
-            title=itemView.findViewById(R.id.musicTitle)
-            artist=itemView.findViewById(R.id.musicArtist)
-            save=itemView.findViewById(R.id.btnSave)
-        }
+    class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val image: ImageView = itemView.findViewById(R.id.musicImage)
+        val title: TextView = itemView.findViewById(R.id.musicTitle)
+        val artist: TextView = itemView.findViewById(R.id.musicArtist)
+        val save: ImageButton = itemView.findViewById(R.id.btnSave)
     }
 
     private fun getCurrentUserId(): Int? {

@@ -46,7 +46,11 @@ class LibraryFragment : Fragment() {
 
         loadLibraryEntries()
     }
-
+    fun updateLibraryData(libraryEntries: List<Library>) {
+        libraryList.clear()
+        libraryList.addAll(libraryEntries)
+        libraryAdapter.notifyDataSetChanged()
+    }
     private fun loadLibraryEntries() {
         val currentUserId = getCurrentUserId()
         if (currentUserId != null) {
@@ -57,9 +61,17 @@ class LibraryFragment : Fragment() {
                 libraryAdapter.notifyDataSetChanged()
             } }
     }
-
+    fun onUserLoggedIn() {
+        loadLibraryEntries()
+    }
     private fun getCurrentUserId(): Int? {
         val sharedPreferences = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
         return sharedPreferences.getInt("userId", -1).takeIf { it != -1 }
     }
+    override fun onResume() {
+        super.onResume()
+        loadLibraryEntries()
+    }
+
+
 }

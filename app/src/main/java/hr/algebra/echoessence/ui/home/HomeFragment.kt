@@ -99,4 +99,6 @@ class HomeFragment : Fragment(), OnAlbumClickListener {
             Toast.makeText(context, "No music selected", Toast.LENGTH_SHORT).show()
         }
     }
+
+
 }

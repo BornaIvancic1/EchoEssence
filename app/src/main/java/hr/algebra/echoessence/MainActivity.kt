@@ -78,7 +78,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
     private fun signInGoogle() {
         val signInIntent = googleSignInClient.signInIntent
         signInLauncher.launch(signInIntent)
@@ -118,7 +117,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
 
     private fun navigateToHome(email: String?, name: String?) {
         val intent: Intent = Intent(this, HomeActivity::class.java).apply {
