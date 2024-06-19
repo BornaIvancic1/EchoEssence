@@ -44,14 +44,14 @@ class HomeFragment : Fragment(), OnAlbumClickListener {
             playPauseMusic()
         }
 
-        val coverImage = root.findViewById<ImageView>(R.id.albumArt)
-
         homeViewModel.music.observe(viewLifecycleOwner, Observer { music ->
             Log.d("HomeFragment", "Number of music: ${music.data.size}")
             if (music.data.isEmpty()) {
                 Toast.makeText(context, "No music available", Toast.LENGTH_SHORT).show()
             } else {
-                recyclerView.adapter = activity?.let { MyAdapter(it, music.data, this, ::playPauseMusic) }
+                activity?.let {
+                    recyclerView.adapter = MyAdapter(it, music.data, this, ::playPauseMusic)
+                }
             }
         })
 
@@ -87,7 +87,7 @@ class HomeFragment : Fragment(), OnAlbumClickListener {
         playPauseMusic()
     }
 
-    fun playPauseMusic() {
+    private fun playPauseMusic() {
         val playPauseButton = view?.findViewById<ImageButton>(R.id.playPauseButton)
         if (MusicPlayer.mediaPlayer?.isPlaying == true) {
             MusicPlayer.mediaPlayer?.pause()

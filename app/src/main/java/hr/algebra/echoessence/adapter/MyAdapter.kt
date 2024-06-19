@@ -2,6 +2,7 @@ package hr.algebra.echoessence.adapter
 
 import android.content.Context
 import android.media.MediaPlayer
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,7 +30,7 @@ class MyAdapter(
     private val libraryRepository = LibraryRepository(context)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        val itemView = LayoutInflater.from(context).inflate(R.layout.item_track, parent, false)
+        val itemView = LayoutInflater.from(context).inflate(R.layout.item_album, parent, false)
         return MyViewHolder(itemView)
     }
 
@@ -50,7 +51,7 @@ class MyAdapter(
         }
 
         holder.save.setOnClickListener {
-            val currentUserId = getCurrentUserId() // Get the current use r ID from session or preferences
+            val currentUserId = getCurrentUserId()
             if (currentUserId != null) {
                 val libraryEntry = Library(
                     id = currentData.id,
@@ -76,6 +77,7 @@ class MyAdapter(
         MusicPlayer.mediaPlayer?.release()
         MusicPlayer.mediaPlayer = MediaPlayer.create(context, previewUrl.toUri()).apply {
             setOnErrorListener { mp, what, extra ->
+                Log.e("MusicPlayer", "Error occurred while playing music: $what, $extra")
                 true
             }
             start()
@@ -88,12 +90,19 @@ class MyAdapter(
         artistNameTextView.text = artistName
     }
 
-    class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val image: ImageView = itemView.findViewById(R.id.trackImage)
-        val title: TextView = itemView.findViewById(R.id.trackTitle)
-        val artist: TextView = itemView.findViewById(R.id.trackArtist)
-        val save: ImageButton = itemView.findViewById(R.id.btnSave)
+    class MyViewHolder(itemView: View):RecyclerView.ViewHolder(itemView) {
+        val image: ImageView
+        val title: TextView
+        val artist: TextView
+        val save: ImageButton
+        init {
+            image=itemView.findViewById(R.id.musicImage)
+            title=itemView.findViewById(R.id.musicTitle)
+            artist=itemView.findViewById(R.id.musicArtist)
+            save=itemView.findViewById(R.id.btnSave)
+        }
     }
+
 
     private fun getCurrentUserId(): Int? {
         val sharedPreferences = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
