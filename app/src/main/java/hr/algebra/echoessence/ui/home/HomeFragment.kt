@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.Toast
@@ -26,6 +27,8 @@ class HomeFragment : Fragment(), OnAlbumClickListener {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
+    private lateinit var miniPlayer: View
+    private lateinit var fullPlayer: View
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,7 +46,16 @@ class HomeFragment : Fragment(), OnAlbumClickListener {
         playPauseButton.setOnClickListener {
             playPauseMusic()
         }
+        miniPlayer = root.findViewById(R.id.musicPlayer)
+        fullPlayer = root.findViewById(R.id.fullPlayer)
 
+        miniPlayer.setOnClickListener {
+            togglePlayerVisibility()
+        }
+
+        fullPlayer.findViewById<ImageButton>(R.id.collapseButton).setOnClickListener {
+            togglePlayerVisibility()
+        }
         homeViewModel.music.observe(viewLifecycleOwner, Observer { music ->
             Log.d("HomeFragment", "Number of music: ${music.data.size}")
             if (music.data.isEmpty()) {
@@ -100,5 +112,21 @@ class HomeFragment : Fragment(), OnAlbumClickListener {
         }
     }
 
+    private fun togglePlayerVisibility() {
+        if (miniPlayer != null && fullPlayer != null) {
+            miniPlayer.visibility = if (miniPlayer.visibility == View.VISIBLE) View.GONE else View.VISIBLE
+        fullPlayer.visibility = if (fullPlayer.visibility == View.VISIBLE) View.GONE else View.VISIBLE
 
+            val fullPlayerLayoutParams = fullPlayer.layoutParams
+            if (fullPlayerLayoutParams is FrameLayout.LayoutParams) {
+                fullPlayerLayoutParams.width = FrameLayout.LayoutParams.MATCH_PARENT
+                fullPlayerLayoutParams.height = FrameLayout.LayoutParams.MATCH_PARENT
+                fullPlayer.layoutParams = fullPlayerLayoutParams
+            } else {
+                Log.e("HomeFragment", "Error: Invalid layout params for fullPlayer")
+            }
+        } else {
+            Log.e("HomeFragment", "Error: miniPlayer or fullPlayer is null")
+        }
+    }
 }

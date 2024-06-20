@@ -27,7 +27,12 @@
         layout="@layout/music_widget"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/searchInput" />
+        android:layout_above="@+id/searchInput"
+        android:visibility="visible"/>
+    <include
+        android:id="@+id/fullPlayer"
+        layout="@layout/music_widget_expanded"
+        android:visibility="gone" />
 
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/searchInput"
