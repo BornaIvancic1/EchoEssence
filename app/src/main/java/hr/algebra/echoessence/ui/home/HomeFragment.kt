@@ -7,9 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
-import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -29,6 +29,9 @@ class HomeFragment : Fragment(), OnAlbumClickListener {
     private val binding get() = _binding!!
     private lateinit var miniPlayer: View
     private lateinit var fullPlayer: View
+    private var currentSongTitle: String? = null
+    private var currentArtistName: String? = null
+    private var currentAlbumCoverUrl: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -62,7 +65,7 @@ class HomeFragment : Fragment(), OnAlbumClickListener {
                 Toast.makeText(context, "No music available", Toast.LENGTH_SHORT).show()
             } else {
                 activity?.let {
-                    recyclerView.adapter = MyAdapter(it, music.data, this, ::playPauseMusic)
+                    recyclerView.adapter = MyAdapter(it, music.data, this)
                 }
             }
         })
@@ -89,44 +92,42 @@ class HomeFragment : Fragment(), OnAlbumClickListener {
     }
 
     override fun onAlbumClick(albumCoverUrl: String) {
-        val coverImage = view?.findViewById<ImageView>(R.id.albumArt)
-        coverImage?.let {
-            Picasso.get().load(albumCoverUrl).into(it)
-        }
+        val coverImage: ImageView = requireView().findViewById(R.id.albumArt)
+        val fullCoverImage: ImageView = requireView().findViewById(R.id.fullAlbumArt)
+
+        Picasso.get().load(albumCoverUrl).into(coverImage)
+        Picasso.get().load(albumCoverUrl).into(fullCoverImage)
     }
+
 
     override fun onPlayPauseClick() {
         playPauseMusic()
     }
 
+
+
     private fun playPauseMusic() {
         val playPauseButton = view?.findViewById<ImageButton>(R.id.playPauseButton)
+        val fullPlayPauseButton = fullPlayer.findViewById<ImageButton>(R.id.playPauseButton)
         if (MusicPlayer.mediaPlayer?.isPlaying == true) {
             MusicPlayer.mediaPlayer?.pause()
             playPauseButton?.setImageResource(android.R.drawable.ic_media_play)
+            fullPlayPauseButton?.setImageResource(android.R.drawable.ic_media_play)
         } else if (MusicPlayer.mediaPlayer != null) {
             MusicPlayer.mediaPlayer?.start()
             playPauseButton?.setImageResource(android.R.drawable.ic_media_pause)
+            fullPlayPauseButton?.setImageResource(android.R.drawable.ic_media_pause)
         } else {
             Toast.makeText(context, "No music selected", Toast.LENGTH_SHORT).show()
         }
     }
 
     private fun togglePlayerVisibility() {
-        if (miniPlayer != null && fullPlayer != null) {
-            miniPlayer.visibility = if (miniPlayer.visibility == View.VISIBLE) View.GONE else View.VISIBLE
+        miniPlayer.visibility = if (miniPlayer.visibility == View.VISIBLE) View.GONE else View.VISIBLE
         fullPlayer.visibility = if (fullPlayer.visibility == View.VISIBLE) View.GONE else View.VISIBLE
 
-            val fullPlayerLayoutParams = fullPlayer.layoutParams
-            if (fullPlayerLayoutParams is FrameLayout.LayoutParams) {
-                fullPlayerLayoutParams.width = FrameLayout.LayoutParams.MATCH_PARENT
-                fullPlayerLayoutParams.height = FrameLayout.LayoutParams.MATCH_PARENT
-                fullPlayer.layoutParams = fullPlayerLayoutParams
-            } else {
-                Log.e("HomeFragment", "Error: Invalid layout params for fullPlayer")
-            }
-        } else {
-            Log.e("HomeFragment", "Error: miniPlayer or fullPlayer is null")
+        if (fullPlayer.visibility == View.VISIBLE) {
+            fullPlayer.bringToFront()
         }
     }
 }

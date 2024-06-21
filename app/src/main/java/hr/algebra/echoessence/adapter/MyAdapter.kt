@@ -23,8 +23,7 @@ import hr.algebra.echoessence.singleton.MusicPlayer
 class MyAdapter(
     val context: FragmentActivity,
     val dataList: List<Data>,
-    val listener: OnAlbumClickListener,
-    val playPauseMusic: () -> Unit
+    val listener: OnAlbumClickListener
 ) : RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
 
     private val libraryRepository = LibraryRepository(context)
@@ -45,7 +44,7 @@ class MyAdapter(
         Picasso.get().load(currentData.album.cover_xl).into(holder.image)
 
         holder.itemView.setOnClickListener {
-            playMusic(currentData.preview, currentData.title, currentData.artist.name)
+            playMusic(currentData.preview, currentData.title, currentData.artist.name,currentData.album.cover_xl)
             listener.onAlbumClick(currentData.album.cover_xl)
         }
 
@@ -70,7 +69,7 @@ class MyAdapter(
         }
     }
 
-    private fun playMusic(previewUrl: String, songName: String, artistName: String) {
+    private fun playMusic(previewUrl: String, songName: String, artistName: String, albumCoverUrl: String) {
         MusicPlayer.mediaPlayer?.stop()
         MusicPlayer.mediaPlayer?.release()
         MusicPlayer.mediaPlayer = MediaPlayer.create(context, previewUrl.toUri()).apply {
@@ -82,10 +81,16 @@ class MyAdapter(
         }
 
         val songNameTextView = context.findViewById<TextView>(R.id.songName)
+        val fullSongNameTextView = context.findViewById<TextView>(R.id.fullSongName)
         val artistNameTextView = context.findViewById<TextView>(R.id.artistName)
+        val fullArtistNameTextView = context.findViewById<TextView>(R.id.fullArtistName)
 
         songNameTextView.text = songName
+        fullSongNameTextView.text=songName
         artistNameTextView.text = artistName
+        fullArtistNameTextView.text = artistName
+
+
     }
 
     class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
