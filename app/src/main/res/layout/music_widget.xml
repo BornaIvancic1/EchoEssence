@@ -4,15 +4,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:padding="16dp"
-    android:background="?attr/colorSecondary"
-  >
-
+    android:background="@drawable/rounded_corners">
+    <androidx.cardview.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        cardElevation="35dp"
+        android:layout_marginStart="10dp"
+        android:elevation="35dp"
+        app:cardCornerRadius="2dp">
     <ImageView
         android:id="@+id/albumArt"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_margin="5dp"/>
-
+    </androidx.cardview.widget.CardView>
     <TextView
         android:id="@+id/songName"
         android:layout_width="0dp"

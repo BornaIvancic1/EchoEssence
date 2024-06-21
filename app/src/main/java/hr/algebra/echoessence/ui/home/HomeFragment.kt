@@ -5,6 +5,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
@@ -125,11 +127,26 @@ class HomeFragment : Fragment(), OnAlbumClickListener {
     }
 
     private fun togglePlayerVisibility() {
-        miniPlayer.visibility = if (miniPlayer.visibility == View.VISIBLE) View.GONE else View.VISIBLE
-        fullPlayer.visibility = if (fullPlayer.visibility == View.VISIBLE) View.GONE else View.VISIBLE
-
-        if (fullPlayer.visibility == View.VISIBLE) {
+        if (miniPlayer.visibility == View.VISIBLE) {
+            miniPlayer.visibility = View.GONE
+            fullPlayer.visibility = View.VISIBLE
             fullPlayer.bringToFront()
+            val zoomIn = AnimationUtils.loadAnimation(context, R.anim.zoom_in)
+            fullPlayer.startAnimation(zoomIn)
+        } else {
+            val zoomOut = AnimationUtils.loadAnimation(context, R.anim.zoom_out)
+            fullPlayer.startAnimation(zoomOut)
+            zoomOut.setAnimationListener(object : Animation.AnimationListener {
+                override fun onAnimationStart(animation: Animation) {}
+
+                override fun onAnimationEnd(animation: Animation) {
+                    fullPlayer.visibility = View.GONE
+                    miniPlayer.visibility = View.VISIBLE
+                }
+
+                override fun onAnimationRepeat(animation: Animation) {}
+            })
         }
     }
+
 }
