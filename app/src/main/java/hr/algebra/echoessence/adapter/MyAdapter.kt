@@ -44,7 +44,7 @@ class MyAdapter(
         Picasso.get().load(currentData.album.cover_xl).into(holder.image)
 
         holder.itemView.setOnClickListener {
-            playMusic(currentData.preview, currentData.title, currentData.artist.name,currentData.album.cover_xl)
+            playMusic(currentData.preview, currentData.title, currentData.artist.name)
             listener.onAlbumClick(currentData.album.cover_xl)
         }
 
@@ -69,7 +69,7 @@ class MyAdapter(
         }
     }
 
-    private fun playMusic(previewUrl: String, songName: String, artistName: String, albumCoverUrl: String) {
+    private fun playMusic(previewUrl: String, songName: String, artistName: String) {
         MusicPlayer.mediaPlayer?.stop()
         MusicPlayer.mediaPlayer?.release()
         MusicPlayer.mediaPlayer = MediaPlayer.create(context, previewUrl.toUri()).apply {

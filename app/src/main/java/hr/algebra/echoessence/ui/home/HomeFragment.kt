@@ -29,9 +29,7 @@ class HomeFragment : Fragment(), OnAlbumClickListener {
     private val binding get() = _binding!!
     private lateinit var miniPlayer: View
     private lateinit var fullPlayer: View
-    private var currentSongTitle: String? = null
-    private var currentArtistName: String? = null
-    private var currentAlbumCoverUrl: String? = null
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,6 +45,10 @@ class HomeFragment : Fragment(), OnAlbumClickListener {
 
         val playPauseButton = root.findViewById<ImageButton>(R.id.playPauseButton)
         playPauseButton.setOnClickListener {
+            playPauseMusic()
+        }
+        val fullPlayPauseButton = root.findViewById<ImageButton>(R.id.fullPlayPauseButton)
+        fullPlayPauseButton.setOnClickListener {
             playPauseMusic()
         }
         miniPlayer = root.findViewById(R.id.musicPlayer)
@@ -108,7 +110,7 @@ class HomeFragment : Fragment(), OnAlbumClickListener {
 
     private fun playPauseMusic() {
         val playPauseButton = view?.findViewById<ImageButton>(R.id.playPauseButton)
-        val fullPlayPauseButton = fullPlayer.findViewById<ImageButton>(R.id.playPauseButton)
+        val fullPlayPauseButton = view?.findViewById<ImageButton>(R.id.fullPlayPauseButton)
         if (MusicPlayer.mediaPlayer?.isPlaying == true) {
             MusicPlayer.mediaPlayer?.pause()
             playPauseButton?.setImageResource(android.R.drawable.ic_media_play)
