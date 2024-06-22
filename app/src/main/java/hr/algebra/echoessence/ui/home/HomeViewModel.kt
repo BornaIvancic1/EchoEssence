@@ -17,6 +17,12 @@ class HomeViewModel : ViewModel() {
     private val _music = MutableLiveData<MyData>()
     val music: LiveData<MyData> get() = _music
 
+    var currentAlbumCoverUrl: String? = null
+    var currentSongTitle: String? = null
+    var currentArtistName: String? = null
+    var dominantColor: Int? = null
+    var vibrantColor: Int? = null
+
     fun searchMusic(context: Context, query: String) {
         val fetcher = DeezerFetcher(context)
         fetcher.search(query).enqueue(object : Callback<MyData> {

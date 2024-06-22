@@ -2,7 +2,6 @@ package hr.algebra.echoessence.ui.home
 
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.util.Log
@@ -38,41 +37,47 @@ class HomeFragment : Fragment(), OnAlbumClickListener {
     private lateinit var miniPlayer: View
     private lateinit var fullPlayer: View
     private lateinit var colorExtractor: ColorExtractor
+    private lateinit var homeViewModel: HomeViewModel
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         val recyclerView = root.findViewById<RecyclerView>(R.id.recyclerView)
         recyclerView.layoutManager = GridLayoutManager(context, 1)
-        val homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
+        homeViewModel = ViewModelProvider(requireActivity()).get(HomeViewModel::class.java)
 
         colorExtractor = ColorExtractor(requireContext())
 
         miniPlayer = root.findViewById(R.id.musicPlayer)
         fullPlayer = root.findViewById(R.id.fullPlayer)
 
-        setupListeners(root, homeViewModel)
+        setupListeners(root)
         observeMusic(homeViewModel, recyclerView)
 
         return root
     }
 
-    private fun setupListeners(root: View, homeViewModel: HomeViewModel) {
-        root.findViewById<ImageButton>(R.id.playPauseButton).setOnClickListener {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        updateMusicPlayerUI()
+    }
+
+    private fun setupListeners(root: View) {
+        root.findViewById<ImageButton>(R.id.playPauseButton)?.setOnClickListener {
             playPauseMusic()
         }
-        root.findViewById<ImageButton>(R.id.fullPlayPauseButton).setOnClickListener {
+        root.findViewById<ImageButton>(R.id.fullPlayPauseButton)?.setOnClickListener {
             playPauseMusic()
         }
         miniPlayer.setOnClickListener {
             togglePlayerVisibility()
         }
-        fullPlayer.findViewById<ImageButton>(R.id.collapseButton).setOnClickListener {
+        fullPlayer.findViewById<ImageButton>(R.id.collapseButton)?.setOnClickListener {
             togglePlayerVisibility()
         }
-        root.findViewById<Button>(R.id.searchButton).setOnClickListener {
+        root.findViewById<Button>(R.id.searchButton)?.setOnClickListener {
             val query = root.findViewById<EditText>(R.id.searchInput).text.toString()
             if (query.trim().isNotEmpty()) {
                 homeViewModel.searchMusic(requireContext(), query)
@@ -99,20 +104,22 @@ class HomeFragment : Fragment(), OnAlbumClickListener {
     }
 
     override fun onAlbumClick(albumCoverUrl: String) {
-        val fullCoverImage: ImageView = requireView().findViewById(R.id.fullAlbumArt)
-        val coverImage: ImageView = requireView().findViewById(R.id.albumArt) // Ensure this is the correct ID for the mini player ImageView
+        val fullCoverImage: ImageView? = view?.findViewById(R.id.fullAlbumArt)
+        val coverImage: ImageView? = view?.findViewById(R.id.albumArt)
 
         // Load the image into the full player image view
         Picasso.get().load(albumCoverUrl).into(fullCoverImage, object : Callback {
             override fun onSuccess() {
-                // When the image is successfully loaded into the full player
-                val bitmap = (fullCoverImage.drawable as BitmapDrawable).bitmap
-                colorExtractor.extractColors(bitmap, object : ColorExtractor.ColorExtractionListener {
-                    override fun onColorsExtracted(dominantColor: Int, vibrantColor: Int) {
-                        // Apply the extracted and possibly darkened colors as a gradient background
-                        applyGradientBackground(dominantColor, vibrantColor)
-                    }
-                })
+                fullCoverImage?.drawable?.let { drawable ->
+                    val bitmap = (drawable as BitmapDrawable).bitmap
+                    colorExtractor.extractColors(bitmap, object : ColorExtractor.ColorExtractionListener {
+                        override fun onColorsExtracted(dominantColor: Int, vibrantColor: Int) {
+                            homeViewModel.dominantColor = dominantColor
+                            homeViewModel.vibrantColor = vibrantColor
+                            applyGradientBackground(dominantColor, vibrantColor)
+                        }
+                    })
+                }
             }
             override fun onError(e: Exception?) {
                 Toast.makeText(context, "Error loading image into full player", Toast.LENGTH_SHORT).show()
@@ -128,6 +135,9 @@ class HomeFragment : Fragment(), OnAlbumClickListener {
                 Toast.makeText(context, "Error loading image into mini player", Toast.LENGTH_SHORT).show()
             }
         })
+
+        homeViewModel.currentAlbumCoverUrl = albumCoverUrl
+        updateMusicPlayerUI()
     }
 
     private fun applyGradientBackground(dominantColor: Int, vibrantColor: Int) {
@@ -145,14 +155,12 @@ class HomeFragment : Fragment(), OnAlbumClickListener {
         }
         fullPlayer.background = gradientDrawableFull
 
-
         val colorDrawableMini = GradientDrawable().apply {
             setColor(vibrantColor)
             cornerRadius = cornerRadiusPx
         }
         miniPlayer.background = colorDrawableMini
     }
-
 
     override fun onPlayPauseClick() {
         playPauseMusic()
@@ -194,6 +202,48 @@ class HomeFragment : Fragment(), OnAlbumClickListener {
                 }
                 override fun onAnimationRepeat(animation: Animation) {}
             })
+        }
+    }
+
+    private fun updateMusicPlayerUI() {
+        homeViewModel.currentAlbumCoverUrl?.let { albumCoverUrl ->
+            val fullCoverImage: ImageView? = view?.findViewById(R.id.fullAlbumArt)
+            val coverImage: ImageView? = view?.findViewById(R.id.albumArt)
+
+            fullCoverImage?.let {
+                Picasso.get().load(albumCoverUrl).into(it)
+            }
+            coverImage?.let {
+                Picasso.get().load(albumCoverUrl).into(it)
+            }
+        }
+
+        homeViewModel.currentSongTitle?.let { songTitle ->
+            val songNameTextView: TextView? = view?.findViewById(R.id.songName)
+            val fullSongNameTextView: TextView? = view?.findViewById(R.id.fullSongName)
+            songNameTextView?.text = songTitle
+            fullSongNameTextView?.text = songTitle
+        }
+
+        homeViewModel.currentArtistName?.let { artistName ->
+            val artistNameTextView: TextView? = view?.findViewById(R.id.artistName)
+            val fullArtistNameTextView: TextView? = view?.findViewById(R.id.fullArtistName)
+            artistNameTextView?.text = artistName
+            fullArtistNameTextView?.text = artistName
+        }
+
+        homeViewModel.dominantColor?.let { dominantColor ->
+            homeViewModel.vibrantColor?.let { vibrantColor ->
+                applyGradientBackground(dominantColor, vibrantColor)
+            }
+        }
+
+        MusicPlayer.mediaPlayer?.let {
+            if (it.isPlaying) {
+                miniPlayer.visibility = View.VISIBLE
+                fullPlayer.visibility = View.GONE
+                setPlayPauseIcon(android.R.drawable.ic_media_pause)
+            }
         }
     }
 }

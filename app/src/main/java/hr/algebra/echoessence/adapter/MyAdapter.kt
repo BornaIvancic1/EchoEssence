@@ -12,6 +12,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.net.toUri
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import hr.algebra.echoessence.R
@@ -19,6 +20,7 @@ import hr.algebra.echoessence.model.Data
 import hr.algebra.echoessence.model.Library
 import hr.algebra.echoessence.dao.LibraryRepository
 import hr.algebra.echoessence.singleton.MusicPlayer
+import hr.algebra.echoessence.ui.home.HomeViewModel
 
 class MyAdapter(
     val context: FragmentActivity,
@@ -27,6 +29,7 @@ class MyAdapter(
 ) : RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
 
     private val libraryRepository = LibraryRepository(context)
+    private val homeViewModel: HomeViewModel = ViewModelProvider(context).get(HomeViewModel::class.java)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val itemView = LayoutInflater.from(context).inflate(R.layout.item_album, parent, false)
@@ -80,17 +83,18 @@ class MyAdapter(
             start()
         }
 
+        homeViewModel.currentSongTitle = songName
+        homeViewModel.currentArtistName = artistName
+
         val songNameTextView = context.findViewById<TextView>(R.id.songName)
         val fullSongNameTextView = context.findViewById<TextView>(R.id.fullSongName)
         val artistNameTextView = context.findViewById<TextView>(R.id.artistName)
         val fullArtistNameTextView = context.findViewById<TextView>(R.id.fullArtistName)
 
         songNameTextView.text = songName
-        fullSongNameTextView.text=songName
+        fullSongNameTextView.text = songName
         artistNameTextView.text = artistName
         fullArtistNameTextView.text = artistName
-
-
     }
 
     class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -99,7 +103,6 @@ class MyAdapter(
         val artist: TextView = itemView.findViewById(R.id.musicArtist)
         val save: ImageButton = itemView.findViewById(R.id.btnSave)
     }
-
 
     private fun getCurrentUserId(): Int? {
         val sharedPreferences = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
