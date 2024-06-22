@@ -10,12 +10,12 @@ class ColorExtractor(private val context: Context) {
     fun extractColors(bitmap: Bitmap, listener: ColorExtractionListener) {
         Palette.from(bitmap).generate { palette ->
             palette?.let {
-                val defaultColor = context.resources.getColor(android.R.color.black)
+                val defaultColor = Color.BLACK
                 val dominantColor = palette.getDominantColor(defaultColor)
                 val vibrantColor = palette.getVibrantColor(defaultColor)
 
-                val darkenedDominantColor = darkenColor(dominantColor, 0.8f)
-                val darkenedVibrantColor = darkenColor(vibrantColor, 0.8f)
+                val darkenedDominantColor = darkenColor(dominantColor, 0.5f)
+                val darkenedVibrantColor = darkenColor(vibrantColor, 0.5f)
 
                 listener.onColorsExtracted(darkenedDominantColor, darkenedVibrantColor)
             }
@@ -31,6 +31,7 @@ class ColorExtractor(private val context: Context) {
     }
 
     interface ColorExtractionListener {
-        fun onColorsExtracted(darkenedDominantColor: Int, darkenedVibrantColor: Int)
+        fun onColorsExtracted(dominantColor: Int, vibrantColor: Int)
     }
+
 }

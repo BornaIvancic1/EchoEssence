@@ -55,6 +55,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:text="search"
+        android:elevation="8dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         app:cornerRadius="20dp"/>

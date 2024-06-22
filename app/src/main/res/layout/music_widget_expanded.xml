@@ -57,13 +57,20 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="50dp"
         android:background="@drawable/ripple_effect"
-        android:src="@android:drawable/ic_media_pause" />
+        android:src="@android:drawable/ic_media_pause"
+        app:tint="@color/white"
+       />
     <ImageButton
         android:id="@+id/collapseButton"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="36dp"
+        android:padding="15dp"
         android:background="@drawable/ripple_effect"
-        android:src="@drawable/ic_collapse" />
+        android:src="@drawable/ic_collapse"
+        app:tint="@color/white"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        />
 </com.google.android.material.circularreveal.CircularRevealLinearLayout>
