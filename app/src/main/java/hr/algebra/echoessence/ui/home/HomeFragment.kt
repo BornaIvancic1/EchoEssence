@@ -139,24 +139,25 @@ class HomeFragment : Fragment(), OnAlbumClickListener {
 
     private fun applyGradientBackground(dominantColor: Int, vibrantColor: Int) {
         val density = resources.displayMetrics.density
-        val cornerRadiusPx = 50 * density
+        val cornerRadiusPx = 30 * density
 
         Log.d("HomeFragment", "Applying gradient background with vibrant color: $vibrantColor and lighter black")
 
-        val lighterBlack = Color.BLACK
         val gradientDrawableFull = GradientDrawable(
-            GradientDrawable.Orientation.TOP_BOTTOM,
-            intArrayOf(vibrantColor, lighterBlack)
+            GradientDrawable.Orientation.TL_BR,
+            intArrayOf(vibrantColor, dominantColor)
         ).apply {
             cornerRadius = cornerRadiusPx
         }
         fullPlayer.background = gradientDrawableFull
 
-        val colorDrawableMini = GradientDrawable().apply {
-            setColor(vibrantColor)
+        val gradientDrawableMini = GradientDrawable(
+            GradientDrawable.Orientation.TL_BR,
+            intArrayOf(vibrantColor, dominantColor)
+        ).apply {
             cornerRadius = cornerRadiusPx
         }
-        miniPlayer.background = colorDrawableMini
+        miniPlayer.background = gradientDrawableMini
     }
 
     override fun onPlayPauseClick() {
@@ -219,7 +220,9 @@ class HomeFragment : Fragment(), OnAlbumClickListener {
             val songNameTextView: TextView? = view?.findViewById(R.id.songName)
             val fullSongNameTextView: TextView? = view?.findViewById(R.id.fullSongName)
             songNameTextView?.text = songTitle
+            songNameTextView?.isSelected = true // Start marquee
             fullSongNameTextView?.text = songTitle
+            fullSongNameTextView?.isSelected = true // Start marquee
         }
 
         homeViewModel.currentArtistName?.let { artistName ->

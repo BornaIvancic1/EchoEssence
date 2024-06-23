@@ -14,7 +14,7 @@ class ColorExtractor(private val context: Context) {
                 val dominantColor = palette.getDominantColor(defaultColor)
                 val vibrantColor = palette.getVibrantColor(defaultColor)
 
-                val darkenedDominantColor = darkenColor(dominantColor, 0.5f)
+                val darkenedDominantColor = darkenColor(dominantColor, 0.2f)
                 val darkenedVibrantColor = darkenColor(vibrantColor, 0.5f)
 
                 listener.onColorsExtracted(darkenedDominantColor, darkenedVibrantColor)
