@@ -8,5 +8,6 @@ data class Library(
     val duration: Int,
     val albumCoverUrl: String,
     val artistName: String,
-    val artistId: Int
+    val artistId: Int,
+    var note: String? = null
 )

@@ -53,6 +53,8 @@
         android:src="@android:drawable/ic_media_pause"
         android:background="@drawable/ripple_effect"
         android:layout_marginStart="5dp"
-        />
+        android:elevation="30dp"
+        app:tint="@color/white" />
+
 
 </com.google.android.material.circularreveal.CircularRevealLinearLayout>

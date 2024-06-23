@@ -18,6 +18,7 @@ class LibraryRepository(context: Context) {
             put("album_cover_url", library.albumCoverUrl)
             put("artist_name", library.artistName)
             put("artist_id", library.artistId)
+            put("note", library.note)
         }
         val id = db.insert("library", null, values)
         db.close()
@@ -27,7 +28,7 @@ class LibraryRepository(context: Context) {
     fun getLibraryEntriesByUserId(userId: Int): List<Library> {
         val db = dbHelper.readableDatabase
         val cursor: Cursor = db.query(
-            "library", arrayOf("id", "user_id", "album", "song", "duration", "album_cover_url", "artist_name", "artist_id"), "user_id = ?",
+            "library", arrayOf("id", "user_id", "album", "song", "duration", "album_cover_url", "artist_name", "artist_id", "note"), "user_id = ?",
             arrayOf(userId.toString()), null, null, null
         )
         val libraries = mutableListOf<Library>()
@@ -39,11 +40,22 @@ class LibraryRepository(context: Context) {
             val albumCoverUrl = cursor.getString(cursor.getColumnIndexOrThrow("album_cover_url"))
             val artistName = cursor.getString(cursor.getColumnIndexOrThrow("artist_name"))
             val artistId = cursor.getInt(cursor.getColumnIndexOrThrow("artist_id"))
-            libraries.add(Library(id, userId, album, song, duration, albumCoverUrl, artistName, artistId))
+            val note = cursor.getString(cursor.getColumnIndexOrThrow("note"))  // Get the note field here
+            libraries.add(Library(id, userId, album, song, duration, albumCoverUrl, artistName, artistId, note))
         }
         cursor.close()
         db.close()
         return libraries
+    }
+
+    fun updateLibraryEntry(library: Library): Int {
+        val db = dbHelper.writableDatabase
+        val values = ContentValues().apply {
+            put("note", library.note)  // Update the note field here
+        }
+        val rowsAffected = db.update("library", values, "id = ?", arrayOf(library.id.toString()))
+        db.close()
+        return rowsAffected
     }
 
     fun deleteLibraryEntry(libraryId: Long): Int {

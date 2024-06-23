@@ -102,7 +102,6 @@ class HomeFragment : Fragment(), OnAlbumClickListener {
         super.onDestroyView()
         _binding = null
     }
-
     override fun onAlbumClick(albumCoverUrl: String) {
         val fullCoverImage: ImageView? = view?.findViewById(R.id.fullAlbumArt)
         val coverImage: ImageView? = view?.findViewById(R.id.albumArt)
@@ -126,10 +125,8 @@ class HomeFragment : Fragment(), OnAlbumClickListener {
             }
         })
 
-        // Load the image into the mini player image view
         Picasso.get().load(albumCoverUrl).into(coverImage, object : Callback {
             override fun onSuccess() {
-                // Optional: handle success if needed specifically for mini player
             }
             override fun onError(e: Exception?) {
                 Toast.makeText(context, "Error loading image into mini player", Toast.LENGTH_SHORT).show()

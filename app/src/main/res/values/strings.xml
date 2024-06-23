@@ -11,4 +11,6 @@
     <string name="songs">Songs</string>
     <string name="remove_from_library">Remove from library</string>
     <string name="album_art">Album art</string>
+    <string name="save">Save</string>
+    <string name="enter_note_label">Enter Note:</string>
 </resources>
