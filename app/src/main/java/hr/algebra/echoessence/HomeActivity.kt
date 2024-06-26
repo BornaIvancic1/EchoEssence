@@ -2,9 +2,7 @@ package hr.algebra.echoessence
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -61,7 +59,7 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun loadLibraryData() {
-        val userId=getCurrentUserId()
+        val userId = getCurrentUserId()
         val libraryEntries = userId?.let { libraryRepository.getLibraryEntriesByUserId(it) }
         if (libraryEntries != null) {
             updateLibraryUI(libraryEntries)
@@ -76,7 +74,7 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun getCurrentUserId(): Int? {
-        val sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE) // Use 'this' or 'applicationContext'
+        val sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
         return sharedPreferences.getInt("userId", -1).takeIf { it != -1 }
     }
 }
