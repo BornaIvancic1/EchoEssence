@@ -13,4 +13,13 @@
     <string name="album_art">Album art</string>
     <string name="save">Save</string>
     <string name="enter_note_label">Enter Note:</string>
+    <string name="no_track_playing">No track playing</string>
+    <string name="play_pause_button">Play/Pause button</string>
+    <string name="sign_in">Sign In</string>
+    <string name="google_logo">Google logo</string>
+    <string name="artist_song_album">Artist, Song, Album</string>
+    <string name="search">search</string>
+    <string name="profile_information">Profile Information</string>
+    <string name="add_to_library">Add to library</string>
+    <string name="minimize_player">Minimize Player</string>
 </resources>

@@ -42,7 +42,7 @@
             android:id="@+id/songName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="No track playing"
+            android:text="@string/no_track_playing"
             android:textColor="?attr/colorOnPrimary"
             android:textSize="16sp"
             android:singleLine="true"
@@ -77,5 +77,6 @@
         android:background="@drawable/ripple_effect"
         android:layout_marginStart="5dp"
         android:elevation="30dp"
-        android:layout_gravity="center_vertical" />
+        android:layout_gravity="center_vertical"
+        android:contentDescription="@string/play_pause_button" />
 </com.google.android.material.circularreveal.CircularRevealLinearLayout>

@@ -44,9 +44,9 @@
         android:layout_height="50dp"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        android:hint="Artist, Song, Album"
+        android:hint="@string/artist_song_album"
         android:inputType="text"
-        android:layout_toLeftOf="@+id/searchButton"
+        android:layout_toStartOf="@+id/searchButton"
         android:layout_alignParentBottom="true" />
 
     <com.google.android.material.button.MaterialButton
@@ -56,9 +56,9 @@
         android:textStyle="bold"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        android:text="search"
+        android:text="@string/search"
         android:elevation="8dp"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         app:cornerRadius="20dp"/>
 </RelativeLayout>
