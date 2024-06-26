@@ -1,15 +1,20 @@
 package hr.algebra.echoessence.ui.library
 
-import hr.algebra.echoessence.adapter.LibraryAdapter
+import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import hr.algebra.echoessence.R
+import hr.algebra.echoessence.adapter.LibraryAdapter
 import hr.algebra.echoessence.dao.LibraryRepository
 import hr.algebra.echoessence.model.Library
 
@@ -19,6 +24,15 @@ class LibraryFragment : Fragment() {
     private lateinit var libraryAdapter: LibraryAdapter
     private lateinit var libraryRepository: LibraryRepository
     private var libraryList: MutableList<Library> = mutableListOf()
+
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+        } else {
+
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,7 +54,6 @@ class LibraryFragment : Fragment() {
                 libraryAdapter.notifyDataSetChanged()
             },
             onUpdateNoteClickListener = { library ->
-                // Handle update note action
                 libraryRepository.updateLibraryEntry(library)
             }
         )
@@ -49,7 +62,20 @@ class LibraryFragment : Fragment() {
         recyclerView.adapter = libraryAdapter
 
         loadLibraryEntries()
+        requestNotificationPermission()
     }
+
+    private fun requestNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.POST_NOTIFICATIONS)
+                == PackageManager.PERMISSION_GRANTED) {
+            }else {
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            }
+        }
+    }
+
+
 
     fun updateLibraryData(libraryEntries: List<Library>) {
         libraryList.clear()

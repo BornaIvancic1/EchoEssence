@@ -22,4 +22,5 @@
     <string name="profile_information">Profile Information</string>
     <string name="add_to_library">Add to library</string>
     <string name="minimize_player">Minimize Player</string>
+    <string name="save_note">Save Note</string>
 </resources>
