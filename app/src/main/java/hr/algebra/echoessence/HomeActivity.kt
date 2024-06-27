@@ -48,8 +48,10 @@ class HomeActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main)
-        val libraryFragment = navHostFragment?.childFragmentManager?.fragments?.find { it is LibraryFragment } as? LibraryFragment
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main)
+        val libraryFragment =
+            navHostFragment?.childFragmentManager?.fragments?.find { it is LibraryFragment } as? LibraryFragment
         libraryFragment?.onUserLoggedIn()
     }
 
@@ -67,8 +69,10 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun updateLibraryUI(libraryEntries: List<Library>) {
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main)
-        val libraryFragment = navHostFragment?.childFragmentManager?.fragments?.find { it is LibraryFragment } as? LibraryFragment
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main)
+        val libraryFragment =
+            navHostFragment?.childFragmentManager?.fragments?.find { it is LibraryFragment } as? LibraryFragment
 
         libraryFragment?.updateLibraryData(libraryEntries)
     }

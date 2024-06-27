@@ -90,7 +90,8 @@ class LibraryAdapter(
 
         val scrollView: ScrollView = popupView.findViewById(R.id.scrollView)
         val popUp: CircularRevealLinearLayout = popupView.findViewById(R.id.libraryDetailPopup)
-        val libraryFullAlbumArt: ShapeableImageView = popupView.findViewById(R.id.libraryFullAlbumArt)
+        val libraryFullAlbumArt: ShapeableImageView =
+            popupView.findViewById(R.id.libraryFullAlbumArt)
         val libraryFullSongName: TextView = popupView.findViewById(R.id.libraryFullSongName)
         val libraryFullArtistName: TextView = popupView.findViewById(R.id.libraryFullArtistName)
         val libraryFullAlbumTitle: TextView = popupView.findViewById(R.id.libraryFullAlbumTitle)
@@ -99,27 +100,45 @@ class LibraryAdapter(
         val saveNoteButton: Button = popupView.findViewById(R.id.saveNoteButton)
         val libraryCollapseButton: ImageButton = popupView.findViewById(R.id.libraryCollapseButton)
 
+        libraryFullSongName.apply {
+            isSelected = true
+            text = library.songTitle
+        }
+
+        libraryFullArtistName.apply {
+            isSelected = true
+            text = library.artistName
+        }
+
+        libraryFullAlbumTitle.apply {
+            isSelected = true
+            text = library.albumTitle
+        }
+
+        libraryFullDuration.apply {
+            isSelected = true
+            text = "Duration: ${TimeUtils.formatDuration(library.duration)}"
+        }
+
+        libraryFullNote.setText(library.note)
+
         Picasso.get().load(library.albumCoverUrl).into(libraryFullAlbumArt, object : Callback {
             override fun onSuccess() {
                 val drawable = libraryFullAlbumArt.drawable as BitmapDrawable
                 val bitmap = drawable.bitmap
-                colorExtractor.extractColors(bitmap, object : ColorExtractor.ColorExtractionListener {
-                    override fun onColorsExtracted(dominantColor: Int, vibrantColor: Int) {
-                        applyGradientBackground(popUp, dominantColor, vibrantColor)
-                    }
-                })
+                colorExtractor.extractColors(
+                    bitmap,
+                    object : ColorExtractor.ColorExtractionListener {
+                        override fun onColorsExtracted(dominantColor: Int, vibrantColor: Int) {
+                            applyGradientBackground(popUp, dominantColor, vibrantColor)
+                        }
+                    })
             }
 
             override fun onError(e: Exception?) {
                 // Handle error
             }
         })
-
-        libraryFullSongName.text = library.songTitle
-        libraryFullArtistName.text = library.artistName
-        libraryFullAlbumTitle.text = library.albumTitle
-        libraryFullDuration.text = "Duration: ${TimeUtils.formatDuration(library.duration)}"
-        libraryFullNote.setText(library.note)
 
         saveNoteButton.setOnClickListener {
             val updatedNote = libraryFullNote.text.toString()
@@ -147,17 +166,7 @@ class LibraryAdapter(
         popupView.bringToFront()
 
         libraryCollapseButton.setOnClickListener {
-            val zoomOut = AnimationUtils.loadAnimation(context, R.anim.zoom_out)
-            popupView.startAnimation(zoomOut)
-            zoomOut.setAnimationListener(object : Animation.AnimationListener {
-                override fun onAnimationStart(animation: Animation) {}
-                override fun onAnimationEnd(animation: Animation) {
-                    rootView.removeView(popupView)
-                    currentPopupView = null
-                }
-
-                override fun onAnimationRepeat(animation: Animation) {}
-            })
+            closePopup(popupView)
         }
 
         libraryFullNote.setOnFocusChangeListener { _, hasFocus ->
@@ -171,6 +180,7 @@ class LibraryAdapter(
         currentPopupView = popupView
         popupView.visibility = View.VISIBLE
     }
+
     private fun closePopup(popupView: View) {
         val rootView = context.findViewById<ViewGroup>(android.R.id.content)
         val zoomOut = AnimationUtils.loadAnimation(context, R.anim.zoom_out)
@@ -185,6 +195,7 @@ class LibraryAdapter(
             override fun onAnimationRepeat(animation: Animation) {}
         })
     }
+
     private fun applyGradientBackground(view: View, dominantColor: Int, vibrantColor: Int) {
         val density = context.resources.displayMetrics.density
         val cornerRadiusPx = 30 * density

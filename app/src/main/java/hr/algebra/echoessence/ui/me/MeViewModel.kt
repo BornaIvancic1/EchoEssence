@@ -11,7 +11,7 @@ class MeViewModel : ViewModel() {
     }
     val text: LiveData<String> = _text
 
-        val email = MutableLiveData<String>()
-        val name = MutableLiveData<String>()
-        val photoUrl = MutableLiveData<String>()
+    val email = MutableLiveData<String>()
+    val name = MutableLiveData<String>()
+    val photoUrl = MutableLiveData<String>()
 }

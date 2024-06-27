@@ -44,7 +44,6 @@ class MeFragment : Fragment() {
 
         meViewModel.photoUrl.observe(viewLifecycleOwner, Observer { photoUrl ->
             Log.d("MeFragment", "PhotoUrl: $photoUrl")
-            // Use Glide to load the image
             Glide.with(this).load(photoUrl).into(binding.profileImg)
         })
 

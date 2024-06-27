@@ -24,7 +24,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:cornerRadius="20dp"/>
+        app:cornerRadius="20dp" />
 
     <ImageView
         android:id="@+id/imageView"

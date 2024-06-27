@@ -6,7 +6,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import hr.algebra.echoessence.api.DeezerFetcher
-import hr.algebra.echoessence.model.Data
 import hr.algebra.echoessence.model.MyData
 import retrofit2.Call
 import retrofit2.Callback
@@ -33,7 +32,10 @@ class HomeViewModel : ViewModel() {
                         Log.d("HomeViewModel", "Music retrieved successfully: ${myData.data.size}")
                     }
                 } else {
-                    Log.e("HomeViewModel", "Response was not successful. Response code: ${response.code()}")
+                    Log.e(
+                        "HomeViewModel",
+                        "Response was not successful. Response code: ${response.code()}"
+                    )
                 }
             }
 

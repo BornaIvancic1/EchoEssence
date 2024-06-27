@@ -1,6 +1,5 @@
 package hr.algebra.echoessence.ui.home
 
-import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
@@ -40,7 +39,8 @@ class HomeFragment : Fragment(), OnAlbumClickListener {
     private lateinit var homeViewModel: HomeViewModel
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
@@ -102,34 +102,40 @@ class HomeFragment : Fragment(), OnAlbumClickListener {
         super.onDestroyView()
         _binding = null
     }
+
     override fun onAlbumClick(albumCoverUrl: String) {
         val fullCoverImage: ImageView? = view?.findViewById(R.id.fullAlbumArt)
         val coverImage: ImageView? = view?.findViewById(R.id.albumArt)
 
-        // Load the image into the full player image view
         Picasso.get().load(albumCoverUrl).into(fullCoverImage, object : Callback {
             override fun onSuccess() {
                 fullCoverImage?.drawable?.let { drawable ->
                     val bitmap = (drawable as BitmapDrawable).bitmap
-                    colorExtractor.extractColors(bitmap, object : ColorExtractor.ColorExtractionListener {
-                        override fun onColorsExtracted(dominantColor: Int, vibrantColor: Int) {
-                            homeViewModel.dominantColor = dominantColor
-                            homeViewModel.vibrantColor = vibrantColor
-                            applyGradientBackground(dominantColor, vibrantColor)
-                        }
-                    })
+                    colorExtractor.extractColors(
+                        bitmap,
+                        object : ColorExtractor.ColorExtractionListener {
+                            override fun onColorsExtracted(dominantColor: Int, vibrantColor: Int) {
+                                homeViewModel.dominantColor = dominantColor
+                                homeViewModel.vibrantColor = vibrantColor
+                                applyGradientBackground(dominantColor, vibrantColor)
+                            }
+                        })
                 }
             }
+
             override fun onError(e: Exception?) {
-                Toast.makeText(context, "Error loading image into full player", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Error loading image into full player", Toast.LENGTH_SHORT)
+                    .show()
             }
         })
 
         Picasso.get().load(albumCoverUrl).into(coverImage, object : Callback {
             override fun onSuccess() {
             }
+
             override fun onError(e: Exception?) {
-                Toast.makeText(context, "Error loading image into mini player", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Error loading image into mini player", Toast.LENGTH_SHORT)
+                    .show()
             }
         })
 
@@ -141,7 +147,10 @@ class HomeFragment : Fragment(), OnAlbumClickListener {
         val density = resources.displayMetrics.density
         val cornerRadiusPx = 30 * density
 
-        Log.d("HomeFragment", "Applying gradient background with vibrant color: $vibrantColor and lighter black")
+        Log.d(
+            "HomeFragment",
+            "Applying gradient background with vibrant color: $vibrantColor and lighter black"
+        )
 
         val gradientDrawableFull = GradientDrawable(
             GradientDrawable.Orientation.TL_BR,
@@ -198,6 +207,7 @@ class HomeFragment : Fragment(), OnAlbumClickListener {
                     fullPlayer.visibility = View.GONE
                     miniPlayer.visibility = View.VISIBLE
                 }
+
                 override fun onAnimationRepeat(animation: Animation) {}
             })
         }
@@ -220,9 +230,9 @@ class HomeFragment : Fragment(), OnAlbumClickListener {
             val songNameTextView: TextView? = view?.findViewById(R.id.songName)
             val fullSongNameTextView: TextView? = view?.findViewById(R.id.fullSongName)
             songNameTextView?.text = songTitle
-            songNameTextView?.isSelected = true // Start marquee
+            songNameTextView?.isSelected = true
             fullSongNameTextView?.text = songTitle
-            fullSongNameTextView?.isSelected = true // Start marquee
+            fullSongNameTextView?.isSelected = true
         }
 
         homeViewModel.currentArtistName?.let { artistName ->

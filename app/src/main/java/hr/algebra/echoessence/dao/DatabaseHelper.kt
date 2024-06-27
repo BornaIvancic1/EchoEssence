@@ -4,7 +4,8 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
-class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
+class DatabaseHelper(context: Context) :
+    SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
     companion object {
         private const val DATABASE_NAME = "echoessence.db"
@@ -55,7 +56,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
                 + "$COLUMN_LIBRARY_ALBUM_COVER_URL TEXT,"
                 + "$COLUMN_LIBRARY_ARTIST_NAME TEXT,"
                 + "$COLUMN_LIBRARY_ARTIST_ID INTEGER,"
-                + "$COLUMN_LIBRARY_NOTE TEXT,"  // Add note column
+                + "$COLUMN_LIBRARY_NOTE TEXT,"
                 + "FOREIGN KEY($COLUMN_LIBRARY_USER_ID) REFERENCES $TABLE_USERS($COLUMN_USER_ID),"
                 + "FOREIGN KEY($COLUMN_LIBRARY_DATA_ID) REFERENCES $TABLE_DATA($COLUMN_DATA_ID))")
 

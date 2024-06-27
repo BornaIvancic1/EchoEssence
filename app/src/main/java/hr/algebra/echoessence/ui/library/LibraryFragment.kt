@@ -67,14 +67,17 @@ class LibraryFragment : Fragment() {
 
     private fun requestNotificationPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.POST_NOTIFICATIONS)
-                == PackageManager.PERMISSION_GRANTED) {
-            }else {
+            if (ContextCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.POST_NOTIFICATIONS
+                )
+                == PackageManager.PERMISSION_GRANTED
+            ) {
+            } else {
                 requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
             }
         }
     }
-
 
 
     fun updateLibraryData(libraryEntries: List<Library>) {
@@ -100,7 +103,8 @@ class LibraryFragment : Fragment() {
     }
 
     private fun getCurrentUserId(): Int? {
-        val sharedPreferences = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+        val sharedPreferences =
+            requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
         return sharedPreferences.getInt("userId", -1).takeIf { it != -1 }
     }
 

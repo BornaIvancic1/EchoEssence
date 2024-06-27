@@ -14,7 +14,7 @@
         android:text="@string/enter_note_label"
         android:textColor="@color/black"
         android:textSize="16sp"
-        android:layout_marginBottom="8dp"/>
+        android:layout_marginBottom="8dp" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
@@ -27,8 +27,7 @@
         app:boxCornerRadiusBottomEnd="20dp"
         app:boxBackgroundColor="?attr/colorPrimaryVariant"
         app:hintTextColor="?attr/colorOnPrimary"
-        app:boxStrokeColor="?attr/colorPrimaryVariant"
-       >
+        app:boxStrokeColor="?attr/colorPrimaryVariant">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etNoteInput"
@@ -37,7 +36,7 @@
             android:textColor="@android:color/white"
             android:textColorHint="@android:color/white"
             android:inputType="text"
-            android:padding="16dp"/>
+            android:padding="16dp" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.button.MaterialButton
@@ -51,5 +50,5 @@
         app:backgroundTint="@color/black"
         android:textStyle="bold"
         app:iconTint="?attr/colorOnPrimary"
-        android:textColor="?attr/colorOnPrimary"/>
+        android:textColor="?attr/colorOnPrimary" />
 </LinearLayout>

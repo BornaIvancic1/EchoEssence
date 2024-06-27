@@ -17,9 +17,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import hr.algebra.echoessence.dao.UserRepository
 import hr.algebra.echoessence.databinding.ActivityMainBinding
 import hr.algebra.echoessence.model.User
-import hr.algebra.echoessence.dao.UserRepository
 
 class MainActivity : AppCompatActivity() {
 
@@ -44,12 +44,13 @@ class MainActivity : AppCompatActivity() {
 
         googleSignInClient = GoogleSignIn.getClient(this, gso)
 
-        signInLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
-                handleResult(task)
+        signInLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == Activity.RESULT_OK) {
+                    val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+                    handleResult(task)
+                }
             }
-        }
 
         findViewById<Button>(R.id.gSignInBtn).setOnClickListener {
             signInGoogle()

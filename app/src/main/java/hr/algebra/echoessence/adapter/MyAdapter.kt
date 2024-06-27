@@ -16,9 +16,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import hr.algebra.echoessence.R
+import hr.algebra.echoessence.dao.LibraryRepository
 import hr.algebra.echoessence.model.Data
 import hr.algebra.echoessence.model.Library
-import hr.algebra.echoessence.dao.LibraryRepository
 import hr.algebra.echoessence.singleton.MusicPlayer
 import hr.algebra.echoessence.ui.home.HomeViewModel
 
@@ -29,7 +29,8 @@ class MyAdapter(
 ) : RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
 
     private val libraryRepository = LibraryRepository(context)
-    private val homeViewModel: HomeViewModel = ViewModelProvider(context).get(HomeViewModel::class.java)
+    private val homeViewModel: HomeViewModel =
+        ViewModelProvider(context).get(HomeViewModel::class.java)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val itemView = LayoutInflater.from(context).inflate(R.layout.item_album, parent, false)

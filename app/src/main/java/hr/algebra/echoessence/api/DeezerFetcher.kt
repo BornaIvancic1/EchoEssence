@@ -1,7 +1,6 @@
 package hr.algebra.echoessence.api
 
 import android.content.Context
-import hr.algebra.echoessence.model.Album
 import hr.algebra.echoessence.model.MyData
 import retrofit2.Call
 import retrofit2.Retrofit
