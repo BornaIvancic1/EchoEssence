@@ -13,19 +13,19 @@ import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.ScrollView
 import android.widget.TextView
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
-import androidx.work.OneTimeWorkRequest
-import androidx.work.WorkManager
+import com.google.android.material.circularreveal.CircularRevealLinearLayout
 import com.google.android.material.imageview.ShapeableImageView
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import hr.algebra.echoessence.R
 import hr.algebra.echoessence.model.Library
 import hr.algebra.echoessence.ui.extra.ColorExtractor
+import hr.algebra.echoessence.ui.extra.NotificationUtil
 import hr.algebra.echoessence.ui.extra.TimeUtils
-import hr.algebra.echoessence.worker.SaveNoteWorker
 
 class LibraryAdapter(
     private val context: FragmentActivity,
@@ -88,6 +88,8 @@ class LibraryAdapter(
         val inflater = LayoutInflater.from(context)
         val popupView = inflater.inflate(R.layout.popup_library_detail, null)
 
+        val scrollView: ScrollView = popupView.findViewById(R.id.scrollView)
+        val popUp: CircularRevealLinearLayout = popupView.findViewById(R.id.libraryDetailPopup)
         val libraryFullAlbumArt: ShapeableImageView = popupView.findViewById(R.id.libraryFullAlbumArt)
         val libraryFullSongName: TextView = popupView.findViewById(R.id.libraryFullSongName)
         val libraryFullArtistName: TextView = popupView.findViewById(R.id.libraryFullArtistName)
@@ -103,12 +105,13 @@ class LibraryAdapter(
                 val bitmap = drawable.bitmap
                 colorExtractor.extractColors(bitmap, object : ColorExtractor.ColorExtractionListener {
                     override fun onColorsExtracted(dominantColor: Int, vibrantColor: Int) {
-                        applyGradientBackground(popupView, dominantColor, vibrantColor)
+                        applyGradientBackground(popUp, dominantColor, vibrantColor)
                     }
                 })
             }
 
             override fun onError(e: Exception?) {
+                // Handle error
             }
         })
 
@@ -118,33 +121,12 @@ class LibraryAdapter(
         libraryFullDuration.text = "Duration: ${TimeUtils.formatDuration(library.duration)}"
         libraryFullNote.setText(library.note)
 
-        // Start marquee effect
-        libraryFullSongName.isSelected = true
-        libraryFullArtistName.isSelected = true
-        libraryFullAlbumTitle.isSelected = true
-        libraryFullDuration.isSelected = true
-
         saveNoteButton.setOnClickListener {
             val updatedNote = libraryFullNote.text.toString()
             library.note = updatedNote
             onUpdateNoteClickListener(library)
-
-            // Trigger the Worker to show a notification
-            val saveNoteWorkRequest = OneTimeWorkRequest.Builder(SaveNoteWorker::class.java).build()
-            WorkManager.getInstance(context).enqueue(saveNoteWorkRequest)
-
-            // Close the popup
-            val zoomOut = AnimationUtils.loadAnimation(context, R.anim.zoom_out)
-            popupView.startAnimation(zoomOut)
-            zoomOut.setAnimationListener(object : Animation.AnimationListener {
-                override fun onAnimationStart(animation: Animation) {}
-                override fun onAnimationEnd(animation: Animation) {
-                    val rootView = context.findViewById<ViewGroup>(android.R.id.content)
-                    rootView.removeView(popupView)
-                    currentPopupView = null
-                }
-                override fun onAnimationRepeat(animation: Animation) {}
-            })
+            NotificationUtil.showNotification(context, "Note Saved", "Your note has been saved.")
+            closePopup(popupView)
         }
 
         val layoutParams = FrameLayout.LayoutParams(
@@ -170,7 +152,6 @@ class LibraryAdapter(
             zoomOut.setAnimationListener(object : Animation.AnimationListener {
                 override fun onAnimationStart(animation: Animation) {}
                 override fun onAnimationEnd(animation: Animation) {
-                    val rootView = context.findViewById<ViewGroup>(android.R.id.content)
                     rootView.removeView(popupView)
                     currentPopupView = null
                 }
@@ -179,10 +160,31 @@ class LibraryAdapter(
             })
         }
 
+        libraryFullNote.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                scrollView.postDelayed({
+                    scrollView.smoothScrollTo(0, libraryFullNote.bottom)
+                }, 200)
+            }
+        }
+
         currentPopupView = popupView
         popupView.visibility = View.VISIBLE
     }
+    private fun closePopup(popupView: View) {
+        val rootView = context.findViewById<ViewGroup>(android.R.id.content)
+        val zoomOut = AnimationUtils.loadAnimation(context, R.anim.zoom_out)
+        popupView.startAnimation(zoomOut)
+        zoomOut.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationStart(animation: Animation) {}
+            override fun onAnimationEnd(animation: Animation) {
+                rootView.removeView(popupView)
+                currentPopupView = null
+            }
 
+            override fun onAnimationRepeat(animation: Animation) {}
+        })
+    }
     private fun applyGradientBackground(view: View, dominantColor: Int, vibrantColor: Int) {
         val density = context.resources.displayMetrics.density
         val cornerRadiusPx = 30 * density
